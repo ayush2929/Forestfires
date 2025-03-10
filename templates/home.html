@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FWI Prediction</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                        url('https://source.unsplash.com/1600x900/?forest,fire') no-repeat center center/cover;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .container {
+            background: rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.6);
+            width: 420px;
+            text-align: center;
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            color: #f9a825;
+            letter-spacing: 2px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 6px;
+            outline: none;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        input[type="text"]:focus {
+            transform: scale(1.03);
+            box-shadow: 0 0 8px #f9a825;
+        }
+
+        input[type="text"]::placeholder {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            background-color: #f9a825;
+            color: #000;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: #ffb300;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid #f9a825;
+            border-radius: 6px;
+            color: #f9a825;
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            backdrop-filter: blur(5px);
+            animation: fadeIn 2s ease;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 180px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; 
+            left: 50%; 
+            margin-left: -90px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>🔥 FWI Prediction 🔥</h1>
+
+        <form action="{{ url_for('predict_datapoint') }}" method="post">
+            <div class="tooltip">
+                <input type="text" name="Temperature" placeholder="Temperature (°C)" required="required" />
+                <span class="tooltiptext">Range: -10 to 50°C</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="RH" placeholder="Relative Humidity (%)" required="required" />
+                <span class="tooltiptext">Range: 0 to 100%</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="Ws" placeholder="Wind Speed (km/h)" required="required" />
+                <span class="tooltiptext">Range: 0 to 100 km/h</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="Rain" placeholder="Rain (mm)" required="required" />
+                <span class="tooltiptext">Range: 0 to 50 mm</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="FFMC" placeholder="FFMC Index" required="required" />
+                <span class="tooltiptext">Range: 0 to 100</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="DMC" placeholder="DMC Index" required="required" />
+                <span class="tooltiptext">Range: 0 to 100</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="ISI" placeholder="ISI Index" required="required" />
+                <span class="tooltiptext">Range: 0 to 50</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="Classes" placeholder="Fire Class (0-1)" required="required" />
+                <span class="tooltiptext">Range: 0 (No Fire) to 1 (Fire)</span>
+            </div>
+
+            <div class="tooltip">
+                <input type="text" name="Region" placeholder="Region (1-5)" required="required" />
+                <span class="tooltiptext">Range: 1 to 5</span>
+            </div>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if results is not none %}
+        <div class="result-box">
+            The FWI Prediction is: {{ results }}
+        </div>
+        {% endif %}
+
+    </div>
+
+</body>
+</html>
